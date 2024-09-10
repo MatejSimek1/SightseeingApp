@@ -68,10 +68,7 @@ public class UserEntityController {
     }
 
     @PostMapping("/{user_id}/favourites")
-    public ResponseEntity<?> addFavourite(
-            @PathVariable Long user_id,
-            @RequestBody FavouritesDto favouritesDto
-    ) {
+    public ResponseEntity<?> addFavourite(@PathVariable Long user_id, @RequestBody FavouritesDto favouritesDto) {
         try {
             FavouritesDto favDto = userEntityService.addFavourite(user_id, favouritesDto);
 

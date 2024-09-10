@@ -67,7 +67,7 @@ public class UserEntityServiceImpl implements UserEntityService {
             userEntity.getFavoriteAttractions().forEach(attraction -> {
                 FavouritesDto favouritesDto = new FavouritesDto();
                 favouritesDto.setAttractionName(attraction.getName());
-                favouritesDto.setLocation(attraction.getLocation()); //TODO to se mora promijeniti kad će se dodativeza
+                favouritesDto.setLocation(attraction.getLocation().getName()); //TODO to se mora promijeniti kad će se dodativeza
                 favouritesDtos.add(favouritesDto);
             });
         });
@@ -87,7 +87,7 @@ public class UserEntityServiceImpl implements UserEntityService {
             userEntity.getFavoriteAttractions()
                     .forEach(attraction -> {
                         if(attraction.getName().equals(favouritesDto.getAttractionName())
-                             || attraction.getLocation().equals(favouritesDto.getLocation())) {
+                             && attraction.getLocation().equals(favouritesDto.getLocation())) { //prije bilo || umjesto &&
                             attractionfavoriteExists.set(true);
                         }
                     });
