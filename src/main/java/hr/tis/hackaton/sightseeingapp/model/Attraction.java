@@ -1,16 +1,14 @@
 package hr.tis.hackaton.sightseeingapp.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
 
 import java.util.Objects;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "ATTRACTION")
+@Table(name = "ATTRACTIONS")
 public class Attraction {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -21,57 +19,24 @@ public class Attraction {
     private String urlName;
     @Column(name = "DESCRIPTION")
     private String description;
-    @Column(name = "LOCATION")
-    private String location;
+    @ManyToOne(fetch = FetchType.EAGER) //mby dodat @JoinColumn
+    @JoinColumn(name = "LOCATION_ID", nullable = false)
+    private Location location;
     @Column(name = "TYPE")
     private String type;
 
-    public Long getId() {
-        return id;
-    }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getUrlName() {
-        return urlName;
-    }
-
     public void setUrlName(String urlName) {
         this.urlName = urlName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     @Override
@@ -83,7 +48,59 @@ public class Attraction {
     }
 
     @Override
+    public String toString() {
+        return "Attraction{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", urlName='" + urlName + '\'' +
+                ", description='" + description + '\'' +
+                ", location=" + location +
+                ", type='" + type + '\'' +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(id, name, urlName, description, location, type);
     }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUrlName() {
+        return urlName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public Attraction() {
+    }
 }
+
