@@ -1,0 +1,15 @@
+package hr.tis.hackaton.sightseeingapp.repository;
+
+import hr.tis.hackaton.sightseeingapp.model.Attraction;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface AttractionRepositoryJpa extends JpaRepository<Attraction, Long> {
+    @Query(value = "SELECT a from Attraction a where a.location.name = :name")
+    List<Attraction> findByName(String name);
+
+}
