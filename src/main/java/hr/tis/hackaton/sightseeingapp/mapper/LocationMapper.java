@@ -14,9 +14,9 @@ import java.util.List;
 public interface LocationMapper {
     LocationMapper INSTANCE = Mappers.getMapper(LocationMapper.class);
 
-    @Mapping(target = "location", source = "location")
+    @Mapping(target = "location", source = "location.name")
     @Mapping(target = "attractions", source = "attractions")
-
     LocationDto toDto(Location location);
+
     List<AttractionDto> toDtoList(List<Attraction> attractions);
 }

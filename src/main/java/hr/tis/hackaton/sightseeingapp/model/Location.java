@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,6 +17,10 @@ public class Location {
     private long id;
     @Column(name = "NAME")
     private String name;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "ATTRACTIONS_ID", referencedColumnName = "ID")
+    private List<Attraction> attractions = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -72,7 +77,6 @@ public class Location {
         this.attractions = attractions;
     }
 
-    @OneToMany(mappedBy = "ATTRACTION", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Attraction> attractions;
+
 
 }

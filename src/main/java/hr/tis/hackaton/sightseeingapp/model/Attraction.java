@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "ATTRACTION")
+@Table(name = "ATTRACTIONS")
 public class Attraction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
