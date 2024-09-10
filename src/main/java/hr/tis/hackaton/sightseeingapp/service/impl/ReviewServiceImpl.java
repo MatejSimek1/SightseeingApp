@@ -32,7 +32,7 @@ public class ReviewServiceImpl implements ReviewService {
     public void saveReview(ReviewDto reviewDto) {
         Attraction attraction = attractionRepositoryJpa.findByAttractionNameAndLocationName(reviewDto.getAttractionName(), reviewDto.getLocation());
         if(attraction == null) {
-            throw new NoAttractionFoundException();
+            throw new NoAttractionFoundException("Attraction not found");
         }
         Review review = new Review();
         review.setAttraction(attraction);

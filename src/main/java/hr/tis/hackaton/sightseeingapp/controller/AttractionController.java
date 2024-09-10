@@ -26,27 +26,22 @@ public class AttractionController {
     }
 
     @GetMapping("/{location}")
-    public ResponseEntity<LocationDto> getAttraction(@PathVariable String location) {
+    public ResponseEntity<LocationDto> getAttraction(
+            @PathVariable String location
+    ) {
         LocationDto locationDto = locationService.getLocation(location);
         if (locationDto == null) {
-            return new ResponseEntity<>(HttpStatus. NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
         return new ResponseEntity<>(locationDto, HttpStatus.OK);
     }
 
     @PostMapping("/review")
-    public ResponseEntity<Void> saveReview(
-            @Valid @RequestBody ReviewDto reviewDto
-    ) {
-        try{
-            reviewService.saveReview(reviewDto);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            if(e instanceof NoAttractionFoundException) {
-                return ResponseEntity.status(404).build();
-            }
-            return ResponseEntity.status(500).build();
-        }
+    public ResponseEntity<Void> saveReview(@Valid @RequestBody ReviewDto reviewDto) {
+
+        reviewService.saveReview(reviewDto);
+        return ResponseEntity.ok().build();
+
     }
 
 
