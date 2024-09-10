@@ -26,7 +26,7 @@ public class UserEntityController {
 
     @PostMapping
     public ResponseEntity<?> saveUser(
-            @Valid UserEntityDto userEntityDto
+            @Valid @RequestBody UserEntityDto userEntityDto
     ) {
         Long id = userEntityService.saveUser(userEntityDto);
 
