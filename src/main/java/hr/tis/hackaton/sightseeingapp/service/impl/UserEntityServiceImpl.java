@@ -10,6 +10,7 @@ import hr.tis.hackaton.sightseeingapp.model.UserEntity;
 import hr.tis.hackaton.sightseeingapp.repository.AttractionRepositoryJpa;
 import hr.tis.hackaton.sightseeingapp.repository.UserEntityRepository;
 import hr.tis.hackaton.sightseeingapp.service.UserEntityService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class UserEntityServiceImpl implements UserEntityService {
         return userEntityMapper.toDto(userEntityRepository.findById(id).orElse(null));
     }
 
+    @Transactional
     @Override
     public Long saveUser(UserEntityDto userEntityDto) {
         if(userEntityRepository.existsByEmail(userEntityDto.getEmail())) {
@@ -55,6 +57,7 @@ public class UserEntityServiceImpl implements UserEntityService {
         return savedUserEntity.getId();
     }
 
+    @Transactional
     @Override
     public UserEntityDto updateUser(Long id, UserEntityDto userEntityDto) {
         UserEntity userEntity = userEntityMapper.toEntity(userEntityDto);
@@ -82,6 +85,7 @@ public class UserEntityServiceImpl implements UserEntityService {
         return favouritesDtos;
     }
 
+    @Transactional
     @Override
     public FavouritesDto addFavourite(Long id, FavouritesDto favouritesDto) {
         UserEntity userEntity = userEntityRepository.findById(id).orElseThrow(() -> new UserEntityNotFoundException("User with id " + id + " not found"));
