@@ -1,5 +1,6 @@
 package hr.tis.hackaton.sightseeingapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ReviewDto {
 
+    @JsonIgnore
     private String location;
+    @JsonIgnore
     private String attractionName;
     private LocalDateTime timestamp;
     @Min(1)

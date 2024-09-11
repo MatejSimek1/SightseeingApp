@@ -2,7 +2,7 @@ package hr.tis.hackaton.sightseeingapp.service.impl;
 
 import hr.tis.hackaton.sightseeingapp.dto.FavouritesDto;
 import hr.tis.hackaton.sightseeingapp.dto.UserEntityDto;
-import hr.tis.hackaton.sightseeingapp.exception.NoAttractionFoundException;
+import hr.tis.hackaton.sightseeingapp.exception.AttractionNotFoundException;
 import hr.tis.hackaton.sightseeingapp.exception.UserEntityNotFoundException;
 import hr.tis.hackaton.sightseeingapp.mapper.UserEntityMapper;
 import hr.tis.hackaton.sightseeingapp.model.Attraction;
@@ -10,6 +10,7 @@ import hr.tis.hackaton.sightseeingapp.model.UserEntity;
 import hr.tis.hackaton.sightseeingapp.repository.AttractionRepositoryJpa;
 import hr.tis.hackaton.sightseeingapp.repository.UserEntityRepository;
 import hr.tis.hackaton.sightseeingapp.service.UserEntityService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class UserEntityServiceImpl implements UserEntityService {
         return userEntityMapper.toDto(userEntityRepository.findById(id).orElse(null));
     }
 
+    @Transactional
     @Override
     public Long saveUser(UserEntityDto userEntityDto) {
         if(userEntityRepository.existsByEmail(userEntityDto.getEmail())) {
@@ -55,6 +57,7 @@ public class UserEntityServiceImpl implements UserEntityService {
         return savedUserEntity.getId();
     }
 
+    @Transactional
     @Override
     public UserEntityDto updateUser(Long id, UserEntityDto userEntityDto) {
         UserEntity userEntity = userEntityMapper.toEntity(userEntityDto);
@@ -82,15 +85,14 @@ public class UserEntityServiceImpl implements UserEntityService {
         return favouritesDtos;
     }
 
+    @Transactional
     @Override
     public FavouritesDto addFavourite(Long id, FavouritesDto favouritesDto) {
         UserEntity userEntity = userEntityRepository.findById(id).orElseThrow(() -> new UserEntityNotFoundException("User with id " + id + " not found"));
 
         Attraction attraction = attractionRepository
-                .findByAttractionNameAndLocationName(favouritesDto.getAttractionName(), favouritesDto.getLocation());
-        if(attraction == null) {
-            throw new NoAttractionFoundException("Attraction with name " + favouritesDto.getAttractionName() + " not found");
-        }
+                .findByAttractionNameAndLocationName(favouritesDto.getAttractionName(), favouritesDto.getLocation()).orElseThrow(() -> new AttractionNotFoundException("Attraction not found"));
+
         boolean isFavourite = userEntity.getFavoriteAttractions()
                 .stream()
                 .anyMatch(attraction1 ->
@@ -98,7 +100,7 @@ public class UserEntityServiceImpl implements UserEntityService {
                         )
         );
         if (isFavourite){
-            throw new NoAttractionFoundException("Attraction is already in favourites");
+            throw new AttractionNotFoundException("Attraction is already in favourites");
         }
         userEntity.getFavoriteAttractions().add(attraction);
         userEntityRepository.save(userEntity);
