@@ -31,36 +31,36 @@ public class Review {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Attraction getAttraction() {
         return attraction;
-    }
-
-    public void setAttraction(Attraction attraction) {
-        this.attraction = attraction;
     }
 
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public BigDecimal getRating() {
         return rating;
     }
 
-    public void setRating(BigDecimal rating) {
-        this.rating = rating;
-    }
-
     public String getReviewText() {
         return reviewText;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setAttraction(Attraction attraction) {
+        this.attraction = attraction;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setRating(BigDecimal rating) {
+        this.rating = rating;
     }
 
     public void setReviewText(String reviewText) {

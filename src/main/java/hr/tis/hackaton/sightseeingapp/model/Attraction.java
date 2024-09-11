@@ -28,55 +28,7 @@ public class Attraction {
     @Column(name = "TYPE")
     private String type;
 
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setUrlName(String urlName) {
-        this.urlName = urlName;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Attraction that = (Attraction) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(urlName, that.urlName) && Objects.equals(description, that.description) && Objects.equals(location, that.location) && Objects.equals(type, that.type);
-    }
-
-    @Override
-    public String toString() {
-        return "Attraction{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", urlName='" + urlName + '\'' +
-                ", description='" + description + '\'' +
-                ", location=" + location +
-                ", type='" + type + '\'' +
-                '}';
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, urlName, description, location, type);
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public Attraction() {
     }
 
     public Long getId() {
@@ -103,7 +55,53 @@ public class Attraction {
         return type;
     }
 
-    public Attraction() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUrlName(String urlName) {
+        this.urlName = urlName;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Attraction that = (Attraction) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(urlName, that.urlName) && Objects.equals(description, that.description) && Objects.equals(location, that.location) && Objects.equals(type, that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, urlName, description, location, type);
+    }
+
+    @Override
+    public String toString() {
+        return "Attraction{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", urlName='" + urlName + '\'' +
+                ", description='" + description + '\'' +
+                ", location=" + location +
+                ", type='" + type + '\'' +
+                '}';
     }
 }
 
