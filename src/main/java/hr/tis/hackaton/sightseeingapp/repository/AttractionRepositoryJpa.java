@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AttractionRepositoryJpa extends JpaRepository<Attraction, Long> {
@@ -14,6 +15,6 @@ public interface AttractionRepositoryJpa extends JpaRepository<Attraction, Long>
     List<Attraction> findByName(String name);
 
     @Query(value = "SELECT a from Attraction a where a.name = :attractionName and a.location.name = :locationName")
-    Attraction findByAttractionNameAndLocationName(String attractionName, String locationName);
+    Optional<Attraction> findByAttractionNameAndLocationName(String attractionName, String locationName);
 
 }

@@ -1,9 +1,10 @@
 package hr.tis.hackaton.sightseeingapp.controller;
 
 import hr.tis.hackaton.sightseeingapp.dto.AttractionDetailsDto;
+import hr.tis.hackaton.sightseeingapp.dto.AttractionDto;
 import hr.tis.hackaton.sightseeingapp.dto.LocationDto;
 import hr.tis.hackaton.sightseeingapp.dto.ReviewDto;
-import hr.tis.hackaton.sightseeingapp.exception.NoAttractionFoundException;
+import hr.tis.hackaton.sightseeingapp.model.Attraction;
 import hr.tis.hackaton.sightseeingapp.service.AttractionService;
 import hr.tis.hackaton.sightseeingapp.service.LocationService;
 import hr.tis.hackaton.sightseeingapp.service.ReviewService;
@@ -18,12 +19,15 @@ public class AttractionController {
 
     private final LocationService locationService;
     private final ReviewService reviewService;
+    private final AttractionService attractionService;
 
     public AttractionController(LocationService locationService,
-                                ReviewService reviewService
+                                ReviewService reviewService,
+                                AttractionService attractionService
     ) {
         this.locationService = locationService;
         this.reviewService = reviewService;
+        this.attractionService = attractionService;
     }
 
     @GetMapping("/{location}")
@@ -56,6 +60,13 @@ public class AttractionController {
         AttractionDetailsDto attractionDetailsDto = reviewService.getAttractionDetails(location, attractionUrlName, excludeReviews, reviewsFrom, reviewsTo);
 
         return new ResponseEntity<>(attractionDetailsDto, HttpStatus.OK);
+    }
+
+    //ovo je samo proof of concept za settanje urlName-a
+    @PostMapping("/save")
+    public ResponseEntity<Void> saveAttraction(@RequestBody Attraction attraction) {
+        attractionService.saveAttraction(attraction);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 

@@ -1,5 +1,6 @@
 package hr.tis.hackaton.sightseeingapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class Location {
     @Column(name = "NAME")
     private String name;
 
+    @JsonIgnore //kod testiranja vidjeti treba li @JsonIgnore
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attraction> attractions = new ArrayList<>();
 
