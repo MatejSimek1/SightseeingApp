@@ -9,7 +9,11 @@ import java.util.List;
 
 @Repository
 public interface AttractionRepositoryJpa extends JpaRepository<Attraction, Long> {
+
     @Query(value = "SELECT a from Attraction a where a.location.name = :name")
     List<Attraction> findByName(String name);
+
+    @Query(value = "SELECT a from Attraction a where a.name = :attractionName and a.location.name = :locationName")
+    Attraction findByAttractionNameAndLocationName(String attractionName, String locationName);
 
 }

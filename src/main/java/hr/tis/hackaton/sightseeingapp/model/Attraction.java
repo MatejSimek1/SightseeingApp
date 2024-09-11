@@ -9,6 +9,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "ATTRACTIONS")
 public class Attraction {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -19,9 +20,11 @@ public class Attraction {
     private String urlName;
     @Column(name = "DESCRIPTION")
     private String description;
+
     @ManyToOne(fetch = FetchType.EAGER) //mby dodat @JoinColumn
     @JoinColumn(name = "LOCATION_ID", nullable = false)
     private Location location;
+
     @Column(name = "TYPE")
     private String type;
 

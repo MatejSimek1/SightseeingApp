@@ -15,27 +15,25 @@ import java.util.List;
 @NoArgsConstructor
 public class UserEntityDto {
 
-    @NotNull
-    @NotEmpty
-    @NotBlank
+    @NotBlank(message = "Name must not be blank")
     private String name;
-    @NotNull
-    @Email
+    @NotBlank(message = "Email must not be blank")
+    @Email(message = "Email must be valid")
     private String email;
 
-    public @NotNull @NotEmpty @NotBlank String getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(@NotNull @NotEmpty @NotBlank String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public @NotNull @Email String getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(@NotNull @Email String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 }

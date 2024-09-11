@@ -1,7 +1,7 @@
 package hr.tis.hackaton.sightseeingapp.controller;
 
 import hr.tis.hackaton.sightseeingapp.dto.FavouritesDto;
-import hr.tis.hackaton.sightseeingapp.dto.UserAlreadyExistsResponse;
+import hr.tis.hackaton.sightseeingapp.dto.ExceptionMessageWrapper;
 import hr.tis.hackaton.sightseeingapp.dto.UserEntityDto;
 import hr.tis.hackaton.sightseeingapp.exception.UserEntityNotFoundException;
 import hr.tis.hackaton.sightseeingapp.service.UserEntityService;
@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -26,13 +25,13 @@ public class UserEntityController {
 
     @PostMapping
     public ResponseEntity<?> saveUser(
-            @Valid UserEntityDto userEntityDto
+            @Valid @RequestBody UserEntityDto userEntityDto
     ) {
         Long id = userEntityService.saveUser(userEntityDto);
 
         if(id == null) {
-            UserAlreadyExistsResponse response =
-                    new UserAlreadyExistsResponse("Već postoji korisnik s tim emailom", LocalDateTime.now());
+            ExceptionMessageWrapper response =
+                    new ExceptionMessageWrapper("Već postoji korisnik s tim emailom", LocalDateTime.now());
             return ResponseEntity.status(400).body(response);
         }
 
@@ -56,7 +55,7 @@ public class UserEntityController {
         return ResponseEntity.ok(userEntityDto);
     }
 
-    @GetMapping("/{user_id}/favourites")
+    @GetMapping("/{user_id}/favorites")
     public ResponseEntity<List<FavouritesDto>> getUserFavourites(
             @PathVariable Long user_id
     ) {
@@ -67,8 +66,11 @@ public class UserEntityController {
         return ResponseEntity.ok(favouritesDto);
     }
 
-    @PostMapping("/{user_id}/favourites")
-    public ResponseEntity<?> addFavourite(@PathVariable Long user_id, @RequestBody FavouritesDto favouritesDto) {
+    @PostMapping("/{user_id}/favorites")
+    public ResponseEntity<?> addFavourite(
+            @PathVariable Long user_id,
+            @RequestBody FavouritesDto favouritesDto
+    ) {
         try {
             FavouritesDto favDto = userEntityService.addFavourite(user_id, favouritesDto);
 
