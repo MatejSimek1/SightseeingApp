@@ -18,8 +18,7 @@ public class Location {
     @Column(name = "NAME")
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "ATTRACTIONS_ID", referencedColumnName = "ID")
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attraction> attractions = new ArrayList<>();
 
     public long getId() {

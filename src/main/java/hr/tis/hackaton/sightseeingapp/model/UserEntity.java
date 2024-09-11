@@ -22,8 +22,12 @@ public class UserEntity {
     @Column(name = "EMAIL")
     private String email;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "FAVORITE_ATTRACTIONS_ID", referencedColumnName = "ID")
+    @ManyToMany
+    @JoinTable(
+            name = "USER_FAVORITE_ATTRACTIONS",
+            joinColumns = @JoinColumn(name = "USER_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ATTRACTION_ID")
+    )
     private List<Attraction> favoriteAttractions = new ArrayList<>();
 
     public Long getId() {

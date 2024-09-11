@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class UserEntityServiceImpl implements UserEntityService {
@@ -52,7 +51,8 @@ public class UserEntityServiceImpl implements UserEntityService {
             return null;
         }
         UserEntity userEntity = userEntityMapper.toEntity(userEntityDto);
-        return userEntityRepository.save(userEntity).getId();
+        UserEntity savedUserEntity = userEntityRepository.save(userEntity);
+        return savedUserEntity.getId();
     }
 
     @Override
