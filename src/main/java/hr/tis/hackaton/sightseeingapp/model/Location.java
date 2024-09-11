@@ -21,16 +21,37 @@ public class Location {
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attraction> attractions = new ArrayList<>();
 
+    public Location(long id, String name, List<Attraction> attractions) {
+        this.id = id;
+        this.name = name;
+        this.attractions = attractions;
+    }
+
+    public Location() {
+    }
+
     public long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Attraction> getAttractions() {
+        return attractions;
     }
 
     public void setId(long id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAttractions(List<Attraction> attractions) {
+        this.attractions = attractions;
     }
 
     @Override
@@ -42,6 +63,11 @@ public class Location {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(id, name, attractions);
+    }
+
+    @Override
     public String toString() {
         return "Location{" +
                 "id=" + id +
@@ -49,33 +75,4 @@ public class Location {
                 ", attractions=" + attractions +
                 '}';
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, attractions);
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Attraction> getAttractions() {
-        return attractions;
-    }
-
-    public void setAttractions(List<Attraction> attractions) {
-        this.attractions = attractions;
-    }
-
-    public Location() {
-    }
-
-    public Location(long id, String name, List<Attraction> attractions) {
-        this.id = id;
-        this.name = name;
-        this.attractions = attractions;
-    }
-
-
-
 }
