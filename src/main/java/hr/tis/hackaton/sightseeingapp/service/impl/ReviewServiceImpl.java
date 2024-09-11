@@ -2,7 +2,7 @@ package hr.tis.hackaton.sightseeingapp.service.impl;
 
 import hr.tis.hackaton.sightseeingapp.dto.AttractionDetailsDto;
 import hr.tis.hackaton.sightseeingapp.dto.ReviewDto;
-import hr.tis.hackaton.sightseeingapp.exception.NoAttractionFoundException;
+import hr.tis.hackaton.sightseeingapp.exception.AttractionNotFoundException;
 import hr.tis.hackaton.sightseeingapp.mapper.ReviewMapper;
 import hr.tis.hackaton.sightseeingapp.model.Attraction;
 import hr.tis.hackaton.sightseeingapp.model.Review;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -36,10 +35,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     @Override
     public void saveReview(ReviewDto reviewDto) {
-        Attraction attraction = attractionRepositoryJpa.findByAttractionNameAndLocationName(reviewDto.getAttractionName(), reviewDto.getLocation());
-        if(attraction == null) {
-            throw new NoAttractionFoundException("Attraction not found");
-        }
+        Attraction attraction = attractionRepositoryJpa.findByAttractionNameAndLocationName(reviewDto.getAttractionName(), reviewDto.getLocation()).orElseThrow(() -> new AttractionNotFoundException("Attraction not found"));
+
         Review review = new Review();
         review.setAttraction(attraction);
         review.setRating(reviewDto.getRating());
@@ -54,7 +51,7 @@ public class ReviewServiceImpl implements ReviewService {
         List<Review> reviews = reviewRepository.findByLocationNameAndAttractionUrlName(location, attractionUrlName);
 
         if(reviews == null || reviews.isEmpty()) {
-            throw new NoAttractionFoundException("Attraction not found");
+            throw new AttractionNotFoundException("Attraction not found");
         }
 
         AttractionDetailsDto attractionDetailsDto = new AttractionDetailsDto();

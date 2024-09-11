@@ -2,7 +2,7 @@ package hr.tis.hackaton.sightseeingapp.service.impl;
 
 import hr.tis.hackaton.sightseeingapp.dto.FavouritesDto;
 import hr.tis.hackaton.sightseeingapp.dto.UserEntityDto;
-import hr.tis.hackaton.sightseeingapp.exception.NoAttractionFoundException;
+import hr.tis.hackaton.sightseeingapp.exception.AttractionNotFoundException;
 import hr.tis.hackaton.sightseeingapp.exception.UserEntityNotFoundException;
 import hr.tis.hackaton.sightseeingapp.mapper.UserEntityMapper;
 import hr.tis.hackaton.sightseeingapp.model.Attraction;
@@ -91,10 +91,8 @@ public class UserEntityServiceImpl implements UserEntityService {
         UserEntity userEntity = userEntityRepository.findById(id).orElseThrow(() -> new UserEntityNotFoundException("User with id " + id + " not found"));
 
         Attraction attraction = attractionRepository
-                .findByAttractionNameAndLocationName(favouritesDto.getAttractionName(), favouritesDto.getLocation());
-        if(attraction == null) {
-            throw new NoAttractionFoundException("Attraction with name " + favouritesDto.getAttractionName() + " not found");
-        }
+                .findByAttractionNameAndLocationName(favouritesDto.getAttractionName(), favouritesDto.getLocation()).orElseThrow(() -> new AttractionNotFoundException("Attraction not found"));
+
         boolean isFavourite = userEntity.getFavoriteAttractions()
                 .stream()
                 .anyMatch(attraction1 ->
@@ -102,7 +100,7 @@ public class UserEntityServiceImpl implements UserEntityService {
                         )
         );
         if (isFavourite){
-            throw new NoAttractionFoundException("Attraction is already in favourites");
+            throw new AttractionNotFoundException("Attraction is already in favourites");
         }
         userEntity.getFavoriteAttractions().add(attraction);
         userEntityRepository.save(userEntity);
