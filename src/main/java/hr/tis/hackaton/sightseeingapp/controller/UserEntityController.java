@@ -26,7 +26,7 @@ public class UserEntityController {
 
     @PostMapping
     public ResponseEntity<?> saveUser(
-            @Valid UserEntityDto userEntityDto
+            @Valid @RequestBody UserEntityDto userEntityDto
     ) {
         Long id = userEntityService.saveUser(userEntityDto);
 
@@ -56,7 +56,7 @@ public class UserEntityController {
         return ResponseEntity.ok(userEntityDto);
     }
 
-    @GetMapping("/{user_id}/favourites")
+    @GetMapping("/{user_id}/favorites")
     public ResponseEntity<List<FavouritesDto>> getUserFavourites(
             @PathVariable Long user_id
     ) {
@@ -67,7 +67,7 @@ public class UserEntityController {
         return ResponseEntity.ok(favouritesDto);
     }
 
-    @PostMapping("/{user_id}/favourites")
+    @PostMapping("/{user_id}/favorites")
     public ResponseEntity<?> addFavourite(
             @PathVariable Long user_id,
             @RequestBody FavouritesDto favouritesDto

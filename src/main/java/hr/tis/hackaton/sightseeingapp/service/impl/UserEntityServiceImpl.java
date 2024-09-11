@@ -45,7 +45,10 @@ public class UserEntityServiceImpl implements UserEntityService {
             return null;
         }
         UserEntity userEntity = userEntityMapper.toEntity(userEntityDto);
-        return userEntityRepository.save(userEntity).getId();
+
+        UserEntity savedUserEntity = userEntityRepository.save(userEntity);
+
+        return savedUserEntity.getId();
     }
 
     @Override
@@ -67,7 +70,7 @@ public class UserEntityServiceImpl implements UserEntityService {
             userEntity.getFavoriteAttractions().forEach(attraction -> {
                 FavouritesDto favouritesDto = new FavouritesDto();
                 favouritesDto.setAttractionName(attraction.getName());
-                favouritesDto.setLocation(attraction.getLocation()); //TODO to se mora promijeniti kad će se dodativeza
+                favouritesDto.setLocation(attraction.getLocation().getName()); //TODO to se mora promijeniti kad će se dodativeza
                 favouritesDtos.add(favouritesDto);
             });
         });
