@@ -1,6 +1,8 @@
 package hr.tis.hackaton.sightseeingapp.configuration;
 
 import hr.tis.hackaton.sightseeingapp.dto.ExceptionMessageWrapper;
+import hr.tis.hackaton.sightseeingapp.exception.NoAttractionFoundException;
+import hr.tis.hackaton.sightseeingapp.exception.NoPictureFoundException;
 import hr.tis.hackaton.sightseeingapp.exception.AttractionNotFoundException;
 import hr.tis.hackaton.sightseeingapp.exception.TravelJournalNotFoundException;
 import hr.tis.hackaton.sightseeingapp.exception.UserEntityNotFoundException;
@@ -41,6 +43,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UserEntityNotFoundException.class)
     public final ResponseEntity<ExceptionMessageWrapper> handleNoProductFoundException(UserEntityNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionMessageWrapper(exception.getMessage()));
+    }
+
+    @ExceptionHandler(NoPictureFoundException.class)
+    public final ResponseEntity<ExceptionMessageWrapper> handleNoProductFoundException(NoPictureFoundException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionMessageWrapper(exception.getMessage()));
     }
 
 }
