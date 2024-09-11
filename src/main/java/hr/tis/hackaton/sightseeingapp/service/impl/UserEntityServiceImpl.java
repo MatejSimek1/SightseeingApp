@@ -2,8 +2,12 @@ package hr.tis.hackaton.sightseeingapp.service.impl;
 
 import hr.tis.hackaton.sightseeingapp.dto.FavouritesDto;
 import hr.tis.hackaton.sightseeingapp.dto.UserEntityDto;
+import hr.tis.hackaton.sightseeingapp.exception.NoAttractionFoundException;
+import hr.tis.hackaton.sightseeingapp.exception.UserEntityNotFoundException;
 import hr.tis.hackaton.sightseeingapp.mapper.UserEntityMapper;
+import hr.tis.hackaton.sightseeingapp.model.Attraction;
 import hr.tis.hackaton.sightseeingapp.model.UserEntity;
+import hr.tis.hackaton.sightseeingapp.repository.AttractionRepositoryJpa;
 import hr.tis.hackaton.sightseeingapp.repository.UserEntityRepository;
 import hr.tis.hackaton.sightseeingapp.service.UserEntityService;
 import org.springframework.stereotype.Service;
@@ -11,19 +15,21 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class UserEntityServiceImpl implements UserEntityService {
 
     private final UserEntityRepository userEntityRepository;
     private final UserEntityMapper userEntityMapper;
+    private final AttractionRepositoryJpa attractionRepository;
 
     public UserEntityServiceImpl(UserEntityRepository userEntityRepository,
-                                 UserEntityMapper userEntityMapper
+                                 UserEntityMapper userEntityMapper,
+                                    AttractionRepositoryJpa attractionRepository
     ) {
         this.userEntityRepository = userEntityRepository;
         this.userEntityMapper = userEntityMapper;
+        this.attractionRepository = attractionRepository;
     }
 
 
@@ -45,7 +51,8 @@ public class UserEntityServiceImpl implements UserEntityService {
             return null;
         }
         UserEntity userEntity = userEntityMapper.toEntity(userEntityDto);
-        return userEntityRepository.save(userEntity).getId();
+        UserEntity savedUserEntity = userEntityRepository.save(userEntity);
+        return savedUserEntity.getId();
     }
 
     @Override
@@ -67,7 +74,7 @@ public class UserEntityServiceImpl implements UserEntityService {
             userEntity.getFavoriteAttractions().forEach(attraction -> {
                 FavouritesDto favouritesDto = new FavouritesDto();
                 favouritesDto.setAttractionName(attraction.getName());
-                favouritesDto.setLocation(attraction.getLocation()); //TODO to se mora promijeniti kad će se dodativeza
+                favouritesDto.setLocation(attraction.getLocation().getName()); //TODO to se mora promijeniti kad će se dodativeza
                 favouritesDtos.add(favouritesDto);
             });
         });
@@ -77,29 +84,24 @@ public class UserEntityServiceImpl implements UserEntityService {
 
     @Override
     public FavouritesDto addFavourite(Long id, FavouritesDto favouritesDto) {
-        Optional<UserEntity> userEntityOptional = userEntityRepository.findById(id);
-        if(userEntityOptional.isEmpty()) {
-            return null;
-        }
-        //TODO dodati repositroy provjeru preko attrraction repository kako bi našli postoji li zapravo takav attraction
-        AtomicBoolean attractionfavoriteExists = new AtomicBoolean(false);
-        userEntityOptional.ifPresent(userEntity -> {
-            userEntity.getFavoriteAttractions()
-                    .forEach(attraction -> {
-                        if(attraction.getName().equals(favouritesDto.getAttractionName())
-                             || attraction.getLocation().equals(favouritesDto.getLocation())) {
-                            attractionfavoriteExists.set(true);
-                        }
-                    });
+        UserEntity userEntity = userEntityRepository.findById(id).orElseThrow(() -> new UserEntityNotFoundException("User with id " + id + " not found"));
 
-        });
-        if(attractionfavoriteExists.get()) {
-            return null;
+        Attraction attraction = attractionRepository
+                .findByAttractionNameAndLocationName(favouritesDto.getAttractionName(), favouritesDto.getLocation());
+        if(attraction == null) {
+            throw new NoAttractionFoundException("Attraction with name " + favouritesDto.getAttractionName() + " not found");
         }
-        else{
-            UserEntity userEntity = userEntityOptional.get();
-            userEntityRepository.save(userEntity);
-            return favouritesDto;
+        boolean isFavourite = userEntity.getFavoriteAttractions()
+                .stream()
+                .anyMatch(attraction1 ->
+                            attraction1.getId().equals(attraction.getId() //dodaje se vrijednost u isFavourite na temelju usporedbi
+                        )
+        );
+        if (isFavourite){
+            throw new NoAttractionFoundException("Attraction is already in favourites");
         }
+        userEntity.getFavoriteAttractions().add(attraction);
+        userEntityRepository.save(userEntity);
+        return favouritesDto;
     }
 }
